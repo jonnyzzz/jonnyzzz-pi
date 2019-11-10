@@ -11,15 +11,24 @@ PIN_IR = 18
 GPIO.setup(PIN_IR, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 print("IR ready, reading...")
+print("time_ns == ", time.time_ns())
 
+def time_ms():
+    return time.monotonic_ns() // 1000000
 
 def handle_ir_packet(channel):
     print("Signal is detected!")
-    
+    results = []
+    finish_time = time_ms() + 200
+    while time_ms() <= finish_time:
+        results.append(GPIO.input(channel))
+        time.sleep(500.0 / 1000.0 / 1000.0)
+    print("data:", " ".join(map(str, results)))
+
 
 GPIO.add_event_detect(PIN_IR, GPIO.FALLING, callback=handle_ir_packet, bouncetime=300)
 
-input("Press key to stop")
+input("Press key to stop...\n")
 GPIO.cleanup()
 
 
