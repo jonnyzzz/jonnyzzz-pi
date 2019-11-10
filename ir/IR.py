@@ -13,18 +13,27 @@ GPIO.setup(PIN_IR, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 print("IR ready, reading...")
 print("time_ns == ", time.time_ns())
 
-def time_ms():
-    return time.monotonic_ns() // 1000000
+def time_mks():
+    return time.monotonic_ns() // 1000
 
 def handle_ir_packet(channel):
-    print("Signal is detected!")
-    results = []
-    finish_time = time_ms() + 200
-    while time_ms() <= finish_time:
-        results.append(GPIO.input(channel))
-        time.sleep(500.0 / 1000.0 / 1000.0)
-    print("data:", " ".join(map(str, results)))
+    vs = [ 0 ]
+    times = [ 0 ]
 
+    start_time = time_mks()
+    while True:
+        now = time_mks() - start_time
+        if now > 300000: 
+            break
+
+        times.append(now)
+        vs.append(GPIO.input(channel))
+        time.sleep(200.0 / 1000.0 / 1000.0) # avg 200ms
+
+    print("data:", " ".join(map(str, vs)))
+    print("times:", " ".join(map(str, times)))
+
+handle_ir_packet(PIN_IR)
 
 GPIO.add_event_detect(PIN_IR, GPIO.FALLING, callback=handle_ir_packet, bouncetime=300)
 
