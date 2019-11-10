@@ -20,6 +20,6 @@ GPIO_PIN=18
 
 https://raspberrypi.stackexchange.com/questions/81876/raspberry-pi-3-not-lirc-not-running-working
 
-
-
+## gpio-ir
+https://www.raspberrypi.org/forums/viewtopic.php?t=236240
 
